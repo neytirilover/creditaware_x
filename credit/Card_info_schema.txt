@@ -1,0 +1,41 @@
+We define the card information mysql schema as follows:
+
+id : the unique reference key
+name : card name (e.g. Disover Miles)
+comp_name : card issue company name (e.g. Discover)
+ann_fee : annual fee
+reward_type : reward types (e.g. hotel, flight etc.)
+reward_points : number of rewarded points
+reward_deadline : minimal dates to get reward
+reward_spend : minimal spend
+comment : additional information
+
+We define user information as follows:
+
+email : email address for notification, also as identification key
+name : user name
+pwd : user's password
+session_key : session key for auto login
+session_time : session start time
+profile : profile folder location
+
+
+profile definition:
+
+For each user we create a folder for him, which include a list of his credit card with json formate
+
+{"card_id1 : ["start time", "award amount", "already spend"]", "card_id2" : [...], ...}
+
+and a rule file with jason format
+
+{"r1":["id1", "id2"], "r2":["id3","id4"], ...}
+
+and a recomendation list which generated from his current card information with  formate
+
+id1
+id2
+.
+.
+.
+idn
+

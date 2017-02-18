@@ -1,0 +1,5 @@
+{% csrf_token %}
+<p>Hello, developer {{ p_name }}</p>
+<p>Link to <a href="/admin">Admin Page.</a></p>
+<p>Add a credit card to your account: <a href="/user_add_card/?uid={{ p_uid }}">here</a></p>
+<p><a href="/logout">Logout</a></p>

@@ -1,0 +1,38 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+<h1>Wecome to the creditaware website</h1>
+<table border="1" id="ll">
+<tr><th>Id</th><th>Card Name</th><th>Company Name</th></tr>
+</table>
+</body>
+
+<script>
+function make_row(data){
+	res = "<tr>";
+	for(var i = 0; i < data.length; i++){
+		res += "<td>"+data[i]+"</td>"	
+	}
+	return res+"</tr>"
+}
+
+function make_list(data){
+	res = ""
+	for(var i = 0; i < data.length; i++){
+		res += make_row(data[i])	
+	}
+	return res
+}
+
+$.post( "/send", { name: "John", time: "2pm" })
+  .done(function( data ) {
+    data = $.parseJSON(data)
+    $('#ll').append(make_list(data))
+  },'json');
+</script>
+
+</html>

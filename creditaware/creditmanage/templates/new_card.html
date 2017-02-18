@@ -1,0 +1,23 @@
+<form role="form" action="/user_add_card/?uid={{ uid }}" method="post">{% csrf_token %}{{ p_form }}<input type="submit" value="Submit"></form>
+
+<table width="40%" border="1" cellspacing="1">
+<tr>
+    <td>Card Name </td>
+    <td> Activation Date </td>
+    <td> Credit Line </td>
+    <td> Options</td>
+    </tr>
+{% for cards in object_list %}
+    <tr>
+    <td>{{ cards.name }} </td>
+    <td> {{ cards.activation_date }} </td>
+    <td> {{cards.creditLine}} </td>
+    <td> <a href='/delete_card/?uid={{ uid }}&cid={{cards.id}}'>delete</a></td>
+    </tr>
+{% empty %}
+    <tr>
+    <td  colspan="4">No Card Yet! </td>
+    </tr>
+    <tr></tr>
+{% endfor %}
+</table>

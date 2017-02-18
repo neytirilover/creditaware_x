@@ -1,0 +1,12 @@
+{% csrf_token %}
+
+{% if request.user.is_staff %}
+  <p>Hello, developer {{ p_name }}.</p>
+{% else %}
+  <p>Hello, dear {{ p_name }} </p>
+{% endif %}
+{% if request.user.is_staff %}
+<p>Link to <a href="/admin">Admin Page.</a></p>
+{% endif %}
+<p>Add a credit card to your account: <a href="/new_card">here</a></p>
+<p><a href="/logout">Logout</a></p>
