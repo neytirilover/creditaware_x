@@ -1,23 +1,71 @@
-<form role="form" action="/user_add_card/?uid={{ uid }}" method="post">{% csrf_token %}{{ p_form }}<input type="submit" value="Submit"></form>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-<table width="40%" border="1" cellspacing="1">
-<tr>
-    <td>Card Name </td>
-    <td> Activation Date </td>
-    <td> Credit Line </td>
-    <td> Options</td>
-    </tr>
-{% for cards in object_list %}
-    <tr>
-    <td>{{ cards.name }} </td>
-    <td> {{ cards.activation_date }} </td>
-    <td> {{cards.creditLine}} </td>
-    <td> <a href='/delete_card/?uid={{ uid }}&cid={{cards.id}}'>delete</a></td>
-    </tr>
-{% empty %}
-    <tr>
-    <td  colspan="4">No Card Yet! </td>
-    </tr>
-    <tr></tr>
+<head>
+<title>Card Management</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900|RobotoDraft:400,100,300,500,700,900'>
+ 
+ <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'>
+ {% load static %}
+<link href="{% static "css/style.css" %}" rel="stylesheet" type="text/css" />
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
+    <script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+  </script>
+</head>
+<body>
+<div id="main">
+<div class="form-module">
+<div class="form-add-card">
+<form role="form" action="/user_add_card/" method="post">
+{% csrf_token %}
+{% for values in p_form %}
+   <h4>{{ values.label }}</h4> {{ values }}
 {% endfor %}
-</table>
+<button type="submit" value="Submit">Add Card</button>
+</form>
+
+
+</div>
+<div class="cta"><a href="/login_landing">Back to Dashboard</a></div>
+</div>
+
+<div class="wrapper">
+<div class="table">
+<div class="row header">
+    <div class="cell">Card Name </div>
+    <div class="cell"> Activation Date </div>
+    <div class="cell"> Credit Line </div>
+    <div class="cell"> Options</div>
+</div>
+{% for cards in object_list %}
+    <div class="row">
+    <div class="cell" color="#FFF">{{ cards.name }} </div>
+    <div class="cell"> {{ cards.activation_date }} </div>
+    <div class="cell"> {{cards.creditLine}} </div>
+    <div class="cell"> <a href='/delete_card/?cid={{cards.id}}'>delete</a></div>
+    </div>
+{% empty %}
+    <div class="row">
+    <div class="cell">No Card Yet! </div>
+    </div>
+{% endfor %}
+</div>
+</div>
+</div>
+
+</body>
+<script type="text/javascript">
+    var session_expiry_check = {{ expiry_check }};  
+    if (session_expiry_check == 1) {
+    alert('Sorry, your session have expired!');
+    document.location = "/logout/";
+}
+</script>
+
+</html>

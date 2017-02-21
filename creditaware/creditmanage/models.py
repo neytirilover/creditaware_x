@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
+from datetime import date
+
 
 class creditCard(models.Model):
     SWITCH_CHOICES = ((0,'False'),(1,'True'))
@@ -18,7 +20,7 @@ class creditCard(models.Model):
     isChargeCard = models.IntegerField(choices=SWITCH_CHOICES, default=0)
     isFirstYearFree = models.IntegerField(choices=SWITCH_CHOICES, default=0)
     cardGrade = models.IntegerField(choices=GRADE_CHOICES, default=1)
-    isKeepable = models.IntegerField(choices=SWITCH_CHOICES, default=0)
+    isKeepable = models.IntegerField(default=0)
     isHotelC = models.IntegerField(choices=SWITCH_CHOICES, default=0)
     isAirlineC = models.IntegerField(choices=SWITCH_CHOICES, default=0)
     hasFTF = models.IntegerField(choices=SWITCH_CHOICES, default=1)
@@ -39,8 +41,8 @@ class user_card(models.Model):
     user = models.ForeignKey(User)
     card = models.ForeignKey(creditCard)
     name = models.CharField(max_length = 100, default = 'default')
-    activation_date = models.DateField(default = '2000-12-31')
-    expiry_date = models.DateField(default = '2001-12-30')
+    activation_date = models.DateField(default = str(date.today().year)+'-'+str(date.today().month)+'-'+str(date.today().day))
+    expiry_date = models.DateField(default = str(date.today().year+1)+'-'+str(date.today().month)+'-'+str(date.today().day))
     isActive = models.IntegerField(default = 1)
     creditLine = models.IntegerField(default=1)
 	

@@ -1,5 +1,14 @@
 {% csrf_token %}
-<p>Hello, developer {{ p_name }}</p>
+{% if request.user.is_staff %}
+    <p>Hello, developer {{ p_name }}</p>
+    <p>Session id: {{session_id}}</p>
+{% else %}
+    <p>Hello, User {{ p_name }}</p>
+{% endif %}
+
+{% if request.user.is_staff %}
 <p>Link to <a href="/admin">Admin Page.</a></p>
-<p>Add a credit card to your account: <a href="/user_add_card/?uid={{ p_uid }}">here</a></p>
+{% endif %}
+<p>Add a credit card to your account: <a href="/user_add_card/">here</a></p>
+<p>To change your password: <a href="/passwd_chg/">here</a></p>
 <p><a href="/logout">Logout</a></p>

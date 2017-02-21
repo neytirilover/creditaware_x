@@ -15,8 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import *
 from django.contrib import admin
-from views import show_index, user_login, login_landing, user_logout,user_add_card,delete_card
-from views import user_register
+from views import show_index, user_login, user_logout,login_landing,user_add_card,delete_card
+from views import user_register, passwd_chg
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -30,6 +30,8 @@ urlpatterns = [
 	url(r'^logout/', user_logout, name = 'user_logout'),
     url(r'^login_landing/$', login_landing, name = 'login_landing'),
     url(r'^user_add_card/$', user_add_card, name = 'user_add_card'),
+    url(r'^user_add_card/login_landing/', login_landing, name = 'back_to_login_landing'),
+    url(r'^passwd_chg/', passwd_chg, name = 'passwd_chg'),
     url(r'^delete_card/$', delete_card, name = 'delete_card'),
     url(r'^register/',user_register,name = 'user_register'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -28,7 +28,7 @@ body {
 }
 .pen-title h1 {
   margin: 0 0 20px;
-  font-size: 48px;
+  font-size: 28px;
   font-weight: 300;
   vertical-align: middle;
 }
@@ -44,15 +44,19 @@ body {
   text-decoration: none;
 }
 
+
+
 /* Form Module */
 .form-module {
   position: relative;
   background: #aaa;
-  max-width: 320px;
+  max-width: 270px;
+  min-width: 200px;
   width: 100%;
   border-top: 5px solid #aaa;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
+  padding:30px 30px;
 }
 .form-module .toggle {
   cursor: pointer;
@@ -72,7 +76,7 @@ body {
 .form-module .toggle .tooltip {
   position: absolute;
   top: -5px;
-  right: -150px;
+  right: -80px;
   display: block;
   background: rgba(0, 0, 0, 0.6);
   width: auto;
@@ -103,9 +107,21 @@ body {
 }
 .form-module .form {
   display: none;
-  padding: 40px;
+  padding: 30px;
 }
-.form-module .form:nth-child(2) {
+.form-module .form-chg-passwd {
+  display: block;
+  padding: 30px;
+} 
+
+.form-module .form-add-card {
+  display: block;
+  padding: 5px;
+  color: #FFF;
+  min-width: 250px;
+} 
+
+.form-module .form:nth-child(2 ) {
   display: block;
 }
 .form-module h2 {
@@ -124,6 +140,18 @@ body {
   line-height: 1;
 }
 
+.form-module .form h4 {
+  margin: 0 0 0px;
+  color: #FFF;
+  font-size: 17px;
+  font-weight: 400;
+  font-family: 'RobotoDraft', 'Roboto', sans-serif;
+  line-height: 1;
+  vertical-align: text-bottom;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .form-module input {
   outline: none;
   display: block;
@@ -136,7 +164,25 @@ body {
   -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
+
+.form-module select {
+  outline: none;
+  display: block;
+  width: 100%;
+  border: 1px solid #d9d9d9;
+  margin: 0 0 20px;
+  padding: 10px 15px;
+  box-sizing: border-box;
+  font-wieght: 400;
+  -webkit-transition: 0.3s ease;
+  transition: 0.3s ease;
+}
+
 .form-module input:focus {
+  border: 1px solid #332;
+  color: #333333;
+}
+.form-module select:focus {
   border: 1px solid #332;
   color: #333333;
 }
@@ -146,6 +192,7 @@ body {
   width: 100%;
   border: 0;
   padding: 10px 15px;
+  box-sizing: border-box;
   color: #ffffff;
   -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
@@ -156,18 +203,21 @@ body {
 .form-module .cta {
   background: #f2f2f2;
   width: 100%;
-  padding: 15px 40px;
+  border: 0;
+  padding: 10px 50px;
   box-sizing: border-box;
   color: #666666;
   font-size: 12px;
   text-align: center;
+    -webkit-transition: 0.3s ease;
+  transition: 0.3s ease;
 }
 .form-module .cta a {
   color: #333333;
   text-decoration: none;
 }
 .test000 {
-	background-color: #666;
+	background-color: #77787B;
 	background-image: url({{ MEDIA_ROOT }}o-CREDIT-CARDS-facebook.jpg);
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -180,3 +230,64 @@ body {
 	width: 70%;
 	text-align: center;
 }
+
+#stylized input{
+    display: block;
+}
+
+.wrapper {
+  margin: 0 auto;
+  padding: 40px;
+  max-width: 800px;
+}
+
+.table {
+  margin: 0 0 40px 0;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: table;
+}
+@media screen and (max-width: 580px) {
+  .table {
+    display: block;
+  }
+}
+
+.row {
+  display: table-row;
+  background: #f6f6f6;
+  color: #666;
+}
+.row:nth-of-type(odd) {
+  background: #e9e9e9;
+}
+.row.header {
+  font-weight: 900;
+  color: #ffffff;
+  background: #33b5e5;
+}
+.row.green {
+  background: #27ae60;
+}
+.row.blue {
+  background: #2980b9;
+}
+@media screen and (max-width: 580px) {
+  .row {
+    padding: 8px 0;
+    display: block;
+  }
+}
+
+.cell {
+  padding: 6px 12px;
+  display: table-cell;
+}
+@media screen and (max-width: 580px) {
+  .cell {
+    padding: 2px 12px;
+    display: block;
+  }
+}
+
+

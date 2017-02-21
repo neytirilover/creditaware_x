@@ -2,6 +2,7 @@
 $('.toggle').click(function(){
   // Switches the Icon
   $(this).children('i').toggleClass('fa-pencil');
+  $('.tooltip').toggle();
   // Switches the forms  
   $('.form').animate({
     height: "toggle",

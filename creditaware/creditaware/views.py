@@ -12,6 +12,7 @@ from creditmanage.models import user_card, creditCard
 from django.forms import modelform_factory
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+import time
 
 
 # class UserCreateForm(UserCreationForm):
@@ -34,13 +35,16 @@ class user_cardForm(ModelForm):
 		
 @csrf_protect
 def show_index(request):
-    errorid = request.GET.get('eid')
-    UNAME_ALERT = ''
-    if errorid == '1':
-        UNAME_ALERT = 'Username already Exists!'
-    elif errorid == '2':
-        UNAME_ALERT = 'Please check your password'
-    return render(request, "index.html",{'MEDIA_ROOT':settings.MEDIA_ROOT, 'UNAME_ALERT':UNAME_ALERT})  
+    user = request.user
+    if not user.is_anonymous():
+        render(request, "index.html",{'MEDIA_ROOT':settings.MEDIA_ROOT,'UNAME_ALERT':'You have already Logged In!'})
+        time.sleep(2)
+        user = request.user
+        p_name = user.first_name
+        userid = user.id
+        session_id = request.session._session_key
+        return render(request, "landing.html", {'p_name':p_name, 'p_uid':userid, 'user':user, 'session_id':session_id})
+    return render(request, "index.html",{'MEDIA_ROOT':settings.MEDIA_ROOT})  
 
 	
 #-----------------------------------------------------------------------------------------
@@ -58,11 +62,17 @@ def user_login(request):
                 login(request, user)
                 user_obj_id = user.id
                 #ctx.update(csrf(request))
-                return redirect(reverse('login_landing')+'?uid='+str(user_obj_id))            
+                request.session['uid'] = user_obj_id
+                user = request.user
+                p_name = user.first_name
+                userid = user_obj_id
+                session_id = request.session._session_key
+                return render(request, "landing.html", {'p_name':p_name, 'p_uid':userid, 'user':user, 'session_id':session_id})          
     ctx = {}
     ctx['MEDIA_ROOT']=settings.MEDIA_ROOT
     ctx['STATIC_ROOT']=settings.STATIC_ROOT
-    return redirect('/admin')
+    UNAME_ALERT = 'Login Failed!'
+    return render(request, "index.html", {'MEDIA_ROOT':settings.MEDIA_ROOT, 'UNAME_ALERT':UNAME_ALERT})
 
 @csrf_protect
 def user_register(request):
@@ -95,14 +105,49 @@ def user_register(request):
         else:
             return redirect(reverse('show_index')+'?eid='+'2')
 
-
+            
+@csrf_protect
+def passwd_chg(request):
+    '''
+    change user password
+    '''
+    user = request.user
+    user_first_name = user.first_name
+    if user.is_anonymous():
+        expiry_check = 1
+        return render(request, "password_chg.html", {'expiry_check':expiry_check})
+    userid = user.id
+    if request.POST:
+        confirm_passwd = request.POST.get('password')
+        user_name = user.username
+        user_validate = authenticate(username = user_name, password = confirm_passwd)
+        if user_validate is not None and user_validate.is_active:
+            passwd1 = request.POST.get('password1')
+            passwd2 = request.POST.get('password2')
+            if passwd1 and passwd2 and passwd1==passwd2:
+                user.set_password(passwd1)
+                user.save()
+                UNAME_ALERT = 'Password Changed Successfully!'
+                return render(request, "password_chg.html", {'p_first_name':user_first_name,'UNAME_ALERT':UNAME_ALERT})
+            else:
+                UNAME_ALERT = 'New password does not match!'
+                return render(request, "password_chg.html", {'p_first_name':user_first_name,'UNAME_ALERT':UNAME_ALERT})
+        else:
+            UNAME_ALERT = 'User Validation Failed, check password!'
+            return render(request, "password_chg.html", {'p_first_name':user_first_name,'UNAME_ALERT':UNAME_ALERT})
+            
+    return render(request, "password_chg.html", {'p_first_name':user_first_name})
 
 @csrf_protect	
 def user_add_card(request):
     SWITCH_CHOICES = ((0,'No'),(1,'Yes'))
     YEARS = range(1980,2080)
-    userid = request.GET.get('uid')
-    user = User.objects.get(id = int(userid))
+    user = request.user
+    userid = user.id
+    if user.is_anonymous():
+        expiry_check = 1
+        return render(request, "new_card.html", {'expiry_check':expiry_check})  
+
     cards = user_card.objects.filter(user = user)
     form = modelform_factory(user_card, form=user_cardForm, widgets = {'activation_date':forms.SelectDateWidget(years = YEARS), 'expiry_date':forms.SelectDateWidget(years = YEARS), 'isActive': forms.Select(choices=SWITCH_CHOICES)})
     if request.POST:
@@ -116,28 +161,35 @@ def user_add_card(request):
             new_user_card.isActive = request.POST.get('isActive')
             new_user_card.creditLine = request.POST.get('creditLine')
             new_user_card.save()
-            return redirect(reverse('user_add_card') + '?uid='+userid)
+            request.session.set_expiry(request.session.get_expiry_age())
     return render(request, "new_card.html", {'uid':userid,'p_form':form,'object_list':cards})
 
 @csrf_protect    
 def delete_card(request):
-    userid = request.GET.get('uid')
+    user = request.user
+    userid = user.id
     cardid = request.GET.get('cid')
     #first get the object from cid:
-    card_del = user_card.objects.get(id = int(cardid))
+    try:
+        card_del = user_card.objects.get(id = int(cardid))
     #then delete_card
-    card_del.delete()
-    #now return to user_add_card with userid as url query string
-    return redirect(reverse('user_add_card') + '?uid='+userid)
+        card_del.delete()
+    except:
+        pass
+    request.session.set_expiry(request.session.get_expiry_age())
+    return user_add_card(request)
 	
 @csrf_protect	
 def login_landing(request):
 
-    userid = request.GET.get('uid')
-    user = User.objects.get(id = int(userid))
+    user = request.user
+    session_id = request.session._session_key
+    if user.is_anonymous():
+        expiry_check = 1
+        return render(request, "new_card.html", {'expiry_check':expiry_check})  
     p_name = user.first_name
-	
-    return render(request, "landing.html", {'p_name':p_name, 'p_uid':userid, 'user':user})
+    userid = user.id
+    return render(request, "landing.html", {'p_name':p_name, 'p_uid':userid, 'user':user, 'session_id':session_id})
     #return HttpResponse("<p>世界好</p>")
 	
 	
